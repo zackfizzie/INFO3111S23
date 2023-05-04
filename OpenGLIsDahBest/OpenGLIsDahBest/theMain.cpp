@@ -12,6 +12,7 @@
 // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -34,7 +35,7 @@ static const char* vertex_shader_text =
 "varying vec3 color;\n"
 "void main()\n"
 "{\n"
-"    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
+"    gl_Position = MVP * vec4(vPos.x, vPos.y, 0.0, 1.0);\n"
 "    color = vCol;\n"
 "}\n";
 
@@ -133,7 +134,7 @@ int main(void)
 //        mat4x4_rotate_Z(m, m, (float)glfwGetTime());
         glm::mat4 matRotateZ = glm::rotate(glm::mat4(1.0f),
                                            (float)glfwGetTime(),
-                                           glm::vec3(0.0f, 0.0f, 1.0f));
+                                           glm::vec3(0.0f, 1.0f, 0.0f));
 //        mat4x4_mul(mvp, p, m);
         m = matRotateZ * m;
 
