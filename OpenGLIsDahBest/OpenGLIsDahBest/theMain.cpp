@@ -33,15 +33,18 @@
 
 struct sVertexXYZ_RGB
 {
-    float x, y;
+    float x, y, z;      // vec2 to vec3 
     float r, g, b;
 };
 
+// Google C dynamic array
+sVertexXYZ_RGB* pSexyVertex = new sVertexXYZ_RGB[11582 * 3];
+
 sVertexXYZ_RGB vertices[3] =
 {
-    { -0.6f, -0.4f, 1.f, 0.f, 0.f },            // Spawn a vertex shader instance
-    {  0.6f, -0.4f, 0.f, 1.f, 0.f },
-    {   0.f,  0.6f, 0.f, 0.f, 1.f }
+    { -6.6f, -0.4f, 0.0f, 1.0f, 0.0f, 0.0f },            // Spawn a vertex shader instance
+    {  6.6f, -0.4f, 0.0f, 1.0f, 0.0f, 0.0f },
+    {  6.0f,  0.6f, 0.0f, 1.0f, 0.0f, 0.0f }
 };
 
 //static const char* vertex_shader_text =
@@ -158,15 +161,32 @@ int main(void)
     glUseProgram(shaderProgram);
 
     mvp_location = glGetUniformLocation(shaderProgram, "MVP");
+
+
+// Vertex layout specification
+ //   struct sVertexXYZ_RGB {
+//        float x, y, z;      // vec2 to vec3 
+//        float r, g, b;  };
     vpos_location = glGetAttribLocation(shaderProgram, "vPos");
     vcol_location = glGetAttribLocation(shaderProgram, "vCol");
 
     glEnableVertexAttribArray(vpos_location);
-    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(vertices[0]), (void*)0);
+    glVertexAttribPointer(vpos_location, 
+                          3, 
+                          GL_FLOAT, 
+                          GL_FALSE,
+                          sizeof(sVertexXYZ_RGB),       // sizeof(vertices[0]), 
+                          (void*)offsetof(sVertexXYZ_RGB, x)); // (void*)0);
+
     glEnableVertexAttribArray(vcol_location);
-    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(vertices[0]), (void*)(sizeof(float) * 2));
+    glVertexAttribPointer(vcol_location, 
+                          3, 
+                          GL_FLOAT, 
+                          GL_FALSE,
+                          sizeof(sVertexXYZ_RGB),   // sizeof(vertices[0]), 
+                          (void*)offsetof(sVertexXYZ_RGB, r));
+                          //(void*)(sizeof(float) * 3));
+//
 
 
     while (!glfwWindowShouldClose(window))
@@ -202,7 +222,7 @@ int main(void)
 
         v = glm::mat4(1.0f);
 
-        glm::vec3 cameraEye = glm::vec3(0.0, 0.0, -4.0f);
+        glm::vec3 cameraEye = glm::vec3(0.0, 0.0, -40.0f);
         glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
         glm::vec3 upVector = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -215,7 +235,17 @@ int main(void)
 //        glUseProgram(program);
 //        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*)mvp);
         glUniformMatrix4fv(mvp_location, 1, GL_FALSE, glm::value_ptr(mvp));
+
+
+        // uniform vec3 colorOverrideRGB;
+        GLint colorOverrideRGB_UL = glGetUniformLocation(shaderProgram, "colorOverrideRGB");
+        glUniform3f(colorOverrideRGB_UL, 1.0f, 1.0f, 1.0f);
+
+        // GL_POINT, GL_LINE, and GL_FILL
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
         glDrawArrays(GL_TRIANGLES, 0, 3);
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();
