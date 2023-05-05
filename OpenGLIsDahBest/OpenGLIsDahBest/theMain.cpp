@@ -13,12 +13,6 @@
 // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
-<<<<<<< Updated upstream
-=======
-//Student Name: Zack Gavin U. Bangalan
-//Student Num: 1073042
-
->>>>>>> Stashed changes
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -213,13 +207,8 @@ int main(void)
         m = glm::mat4(1.0f);        // Identity matrix
 //        mat4x4_rotate_Z(m, m, (float)glfwGetTime());
         glm::mat4 matRotateZ = glm::rotate(glm::mat4(1.0f),
-<<<<<<< Updated upstream
                                            0.0f, ///(float)glfwGetTime(),
                                            glm::vec3(0.0f, 1.0f, 0.0f));
-=======
-                                           (float)glfwGetTime(),
-                                           glm::vec3(0.0f, 0.0f, 1.0f));
->>>>>>> Stashed changes
 //        mat4x4_mul(mvp, p, m);
         m = matRotateZ * m;
 
